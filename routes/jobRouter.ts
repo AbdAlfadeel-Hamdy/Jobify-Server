@@ -10,6 +10,6 @@ import {
 const router = Router();
 
 router.route("/").get(getAllJobs).post(createJob);
-router.route("/:id").get().patch().delete();
+router.route("/:id").get(getJob).patch(updateJob).delete(deleteJob);
 
 export default router;

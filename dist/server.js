@@ -33,6 +33,7 @@ const morgan_1 = __importDefault(require("morgan"));
 const mongoose_1 = __importDefault(require("mongoose"));
 // Routers
 const jobRouter_1 = __importDefault(require("./routes/jobRouter"));
+const errorHandlerMiddleware_1 = __importDefault(require("./middlewares/errorHandlerMiddleware"));
 dotenv.config();
 const app = (0, express_1.default)();
 if (process.env.NODE_ENV === "development")
@@ -42,9 +43,7 @@ app.use("/api/v1/jobs", jobRouter_1.default);
 app.use("*", (req, res, next) => {
     res.status(404).json({ message: "Not found." });
 });
-app.use((err, req, res, next) => {
-    res.status(500).json({ message: "Something went wrong." });
-});
+app.use(errorHandlerMiddleware_1.default);
 const port = process.env.PORT || 5100;
 if (!process.env.MONGO_URL) {
     console.log("MongoDB URL is not valid.");
