@@ -6,7 +6,6 @@ const withValidationErrors = (validateValues) => {
     return [
         validateValues,
         (req, res, next) => {
-            // @ts-ignore
             const errors = (0, express_validator_1.validationResult)(req);
             if (!errors.isEmpty()) {
                 const errorMessages = errors.array().map((err) => err.msg);
