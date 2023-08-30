@@ -28,7 +28,6 @@ exports.getJob = getJob;
 const updateJob = async (req, res, next) => {
     const { id } = req.params;
     const updatedJob = await JobModel_1.default.findByIdAndUpdate(id, req.body, {
-        runValidators: true,
         new: true,
     });
     if (!updatedJob)
