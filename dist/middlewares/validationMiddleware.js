@@ -5,9 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateIdParam = exports.validateJobInput = void 0;
 const express_validator_1 = require("express-validator");
+const mongoose_1 = __importDefault(require("mongoose"));
+const JobModel_1 = __importDefault(require("../models/JobModel"));
 const customErrors_1 = require("../errors/customErrors");
 const constants_1 = require("../utils/constants");
-const mongoose_1 = __importDefault(require("mongoose"));
 const withValidationErrors = (validateValues) => {
     return [
         validateValues,
@@ -15,6 +16,8 @@ const withValidationErrors = (validateValues) => {
             const errors = (0, express_validator_1.validationResult)(req);
             if (!errors.isEmpty()) {
                 const errorMessages = errors.array().map((err) => err.msg);
+                if (errorMessages[0].startsWith("No job"))
+                    throw new customErrors_1.NotFoundError(errorMessages.join(" "));
                 throw new customErrors_1.BadRequestError(errorMessages.join(" "));
             }
             next();
@@ -33,7 +36,12 @@ exports.validateJobInput = withValidationErrors([
         .withMessage("invalid type value."),
 ]);
 exports.validateIdParam = withValidationErrors([
-    (0, express_validator_1.param)("id")
-        .custom((value) => mongoose_1.default.Types.ObjectId.isValid(value))
-        .withMessage("Invalid MongoDB id."),
+    (0, express_validator_1.param)("id").custom(async (value) => {
+        const isValidId = mongoose_1.default.Types.ObjectId.isValid(value);
+        if (!isValidId)
+            throw new customErrors_1.BadRequestError("Invalid MongoDB id.");
+        const job = await JobModel_1.default.findById(value);
+        if (!job)
+            throw new customErrors_1.NotFoundError("No job found with this id.");
+    }),
 ]);
