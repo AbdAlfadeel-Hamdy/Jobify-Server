@@ -1,7 +1,8 @@
 import { Handler } from "express";
 import { StatusCodes } from "http-status-codes";
 import User from "../models/UserModel";
-import { hashPassword } from "../utils/passwordUtils";
+import { comparePassword, hashPassword } from "../utils/passwordUtils";
+import { UnauthenticatedError } from "../errors/customErrors";
 
 export const register: Handler = async (req, res, next) => {
   const isFirstAccount = (await User.countDocuments()) === 0;
@@ -14,6 +15,11 @@ export const register: Handler = async (req, res, next) => {
 };
 
 export const login: Handler = async (req, res, next) => {
-  const user = await User.findOne();
+  const user = await User.findOne({ email: req.body.email });
+
+  const isValidUser =
+    user && (await comparePassword(req.body.password, user.password as string));
+  if (!isValidUser) throw new UnauthenticatedError("Invalid credentials.");
+
   res.status(StatusCodes.OK).json({ user });
 };

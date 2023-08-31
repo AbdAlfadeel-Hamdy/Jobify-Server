@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateUserInput = exports.validateIdParam = exports.validateJobInput = void 0;
+exports.validateLoginInput = exports.validateUserInput = exports.validateIdParam = exports.validateJobInput = void 0;
 const express_validator_1 = require("express-validator");
 const mongoose_1 = __importDefault(require("mongoose"));
 const JobModel_1 = __importDefault(require("../models/JobModel"));
@@ -65,4 +65,16 @@ exports.validateUserInput = withValidationErrors([
         .withMessage("Password must be at least 8 characters long."),
     (0, express_validator_1.body)("location").notEmpty().withMessage("Location is required."),
     (0, express_validator_1.body)("lastName").notEmpty().withMessage("Last name is required."),
+]);
+exports.validateLoginInput = withValidationErrors([
+    (0, express_validator_1.body)("email")
+        .notEmpty()
+        .withMessage("Email is required.")
+        .isEmail()
+        .withMessage("Invalid email format."),
+    (0, express_validator_1.body)("password")
+        .notEmpty()
+        .withMessage("Password is required.")
+        .isLength({ min: 8 })
+        .withMessage("Password must be at least 8 characters long."),
 ]);
