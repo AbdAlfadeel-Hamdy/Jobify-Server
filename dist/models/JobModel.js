@@ -1,18 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
+const constants_1 = require("../utils/constants");
 const jobSchema = new mongoose_1.Schema({
     company: String,
     position: String,
     jobStatus: {
         type: String,
-        enum: ["interview", "declined", "pending"],
-        default: "pending",
+        enum: Object.values(constants_1.JOB_STATUS),
+        default: constants_1.JOB_STATUS.PENDING,
     },
     jobType: {
         type: String,
-        enum: ["full-time", "part-time", "internship"],
-        default: "full-time",
+        enum: Object.values(constants_1.JOB_TYPE),
+        default: constants_1.JOB_TYPE.FULL_TIME,
     },
     jobLocation: {
         type: String,

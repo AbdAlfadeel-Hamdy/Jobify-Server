@@ -21,7 +21,7 @@ const getJob = async (req, res, next) => {
     const { id } = req.params;
     const job = await JobModel_1.default.findById(id);
     if (!job)
-        throw new customErrors_1.NotFoundError("No job with this ID.");
+        throw new customErrors_1.NotFoundError("No job with this id.");
     res.status(http_status_codes_1.StatusCodes.OK).json({ job });
 };
 exports.getJob = getJob;
@@ -31,7 +31,7 @@ const updateJob = async (req, res, next) => {
         new: true,
     });
     if (!updatedJob)
-        throw new customErrors_1.NotFoundError("No job with this ID.");
+        throw new customErrors_1.NotFoundError("No job with this id.");
     res
         .status(http_status_codes_1.StatusCodes.OK)
         .json({ message: "Job modified.", job: updatedJob });
@@ -41,7 +41,7 @@ const deleteJob = async (req, res, next) => {
     const { id } = req.params;
     const removedJob = await JobModel_1.default.findByIdAndDelete(id);
     if (!removedJob)
-        throw new customErrors_1.NotFoundError("No job with this ID.");
+        throw new customErrors_1.NotFoundError("No job with this id.");
     res.status(http_status_codes_1.StatusCodes.OK).json({ message: "Job deleted.", job: removedJob });
 };
 exports.deleteJob = deleteJob;
