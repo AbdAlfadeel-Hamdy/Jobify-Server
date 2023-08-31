@@ -3,10 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateIdParam = exports.validateJobInput = void 0;
+exports.validateUserInput = exports.validateIdParam = exports.validateJobInput = void 0;
 const express_validator_1 = require("express-validator");
 const mongoose_1 = __importDefault(require("mongoose"));
 const JobModel_1 = __importDefault(require("../models/JobModel"));
+const UserModel_1 = __importDefault(require("../models/UserModel"));
 const customErrors_1 = require("../errors/customErrors");
 const constants_1 = require("../utils/constants");
 const withValidationErrors = (validateValues) => {
@@ -44,4 +45,24 @@ exports.validateIdParam = withValidationErrors([
         if (!job)
             throw new customErrors_1.NotFoundError("No job found with this id.");
     }),
+]);
+exports.validateUserInput = withValidationErrors([
+    (0, express_validator_1.body)("name").notEmpty().withMessage("Name is required."),
+    (0, express_validator_1.body)("email")
+        .notEmpty()
+        .withMessage("Email is required.")
+        .isEmail()
+        .withMessage("Invalid email format.")
+        .custom(async (email) => {
+        const user = await UserModel_1.default.findOne({ email });
+        if (user)
+            throw new customErrors_1.BadRequestError("Email already exists.");
+    }),
+    (0, express_validator_1.body)("password")
+        .notEmpty()
+        .withMessage("Password is required.")
+        .isLength({ min: 8 })
+        .withMessage("Password must be at least 8 characters long."),
+    (0, express_validator_1.body)("location").notEmpty().withMessage("Location is required."),
+    (0, express_validator_1.body)("lastName").notEmpty().withMessage("Last name is required."),
 ]);
