@@ -33,6 +33,8 @@ const morgan_1 = __importDefault(require("morgan"));
 const mongoose_1 = __importDefault(require("mongoose"));
 // Routers
 const jobRouter_1 = __importDefault(require("./routes/jobRouter"));
+const authRouter_1 = __importDefault(require("./routes/authRouter"));
+// Middlewares
 const errorHandlerMiddleware_1 = __importDefault(require("./middlewares/errorHandlerMiddleware"));
 dotenv.config();
 const app = (0, express_1.default)();
@@ -40,6 +42,7 @@ if (process.env.NODE_ENV === "development")
     app.use((0, morgan_1.default)("dev"));
 app.use(express_1.default.json());
 app.use("/api/v1/jobs", jobRouter_1.default);
+app.use("/api/v1/auth", authRouter_1.default);
 app.use("*", (req, res, next) => {
     res.status(404).json({ message: "Not found." });
 });
