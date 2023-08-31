@@ -8,6 +8,7 @@ const http_status_codes_1 = require("http-status-codes");
 const UserModel_1 = __importDefault(require("../models/UserModel"));
 const passwordUtils_1 = require("../utils/passwordUtils");
 const customErrors_1 = require("../errors/customErrors");
+const tokenUtils_1 = require("../utils/tokenUtils");
 const register = async (req, res, next) => {
     const isFirstAccount = (await UserModel_1.default.countDocuments()) === 0;
     req.body.role = isFirstAccount ? "admin" : "user";
@@ -21,6 +22,7 @@ const login = async (req, res, next) => {
     const isValidUser = user && (await (0, passwordUtils_1.comparePassword)(req.body.password, user.password));
     if (!isValidUser)
         throw new customErrors_1.UnauthenticatedError("Invalid credentials.");
-    res.status(http_status_codes_1.StatusCodes.OK).json({ user });
+    const token = await (0, tokenUtils_1.createJWT)({ id: user.id, role: user.role });
+    res.status(http_status_codes_1.StatusCodes.OK).json({ token });
 };
 exports.login = login;
