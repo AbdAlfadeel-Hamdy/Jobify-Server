@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, Types } from "mongoose";
 import { JOB_STATUS, JOB_TYPE } from "../utils/constants";
 
 const jobSchema = new Schema(
@@ -18,6 +18,10 @@ const jobSchema = new Schema(
     jobLocation: {
       type: String,
       default: "my city",
+    },
+    createdBy: {
+      type: Types.ObjectId,
+      ref: "User",
     },
   },
   {
