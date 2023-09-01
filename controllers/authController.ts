@@ -27,8 +27,17 @@ export const login: Handler = async (req, res, next) => {
   const oneDay = 1000 * 60 * 60 * 24;
 
   res.cookie("token", token, {
+    httpOnly: true,
     expires: new Date(Date.now() + oneDay),
     secure: process.env.NODE_ENV === "production",
   });
   res.status(StatusCodes.OK).json({ message: "User logged in." });
+};
+
+export const logout: Handler = (req, res, next) => {
+  res.cookie("token", "logout", {
+    httpOnly: true,
+    expires: new Date(Date.now()),
+  });
+  res.status(StatusCodes.OK).json({ message: "User logged out." });
 };
