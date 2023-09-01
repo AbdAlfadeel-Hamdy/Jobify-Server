@@ -6,8 +6,9 @@ import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 
 // Routers
-import jobRouter from "./routes/jobRouter";
 import authRouter from "./routes/authRouter";
+import jobRouter from "./routes/jobRouter";
+import userRouter from "./routes/userRouter";
 // Middlewares
 import errorHandlerMiddleware from "./middlewares/errorHandlerMiddleware";
 import { authenticateUser } from "./middlewares/authMiddleware";
@@ -21,8 +22,9 @@ if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/api/v1/jobs", authenticateUser, jobRouter);
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/jobs", authenticateUser, jobRouter);
+app.use("/api/v1/users", authenticateUser, userRouter);
 
 app.use("*", (req, res, next) => {
   res.status(404).json({ message: "Not found." });

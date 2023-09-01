@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { ValidationChain } from "express-validator";
 import {
   getAllJobs,
   createJob,
@@ -16,12 +17,12 @@ const router = Router();
 router
   .route("/")
   .get(getAllJobs)
-  .post(validateJobInput as any, createJob);
+  .post(validateJobInput as ValidationChain[], createJob);
 router
   .route("/:id")
-  .all(validateIdParam as any)
+  .all(validateIdParam as ValidationChain[])
   .get(getJob)
-  .patch(validateJobInput as any, updateJob)
+  .patch(validateJobInput as ValidationChain[], updateJob)
   .delete(deleteJob);
 
 export default router;
