@@ -19,6 +19,8 @@ const withValidationErrors = (validateValues) => {
                 const errorMessages = errors.array().map((err) => err.msg);
                 if (errorMessages[0].startsWith("No job"))
                     throw new customErrors_1.NotFoundError(errorMessages.join(" "));
+                if (errorMessages[0].startsWith("Not authorized"))
+                    throw new customErrors_1.UnauthorizedError(errorMessages.join(" "));
                 throw new customErrors_1.BadRequestError(errorMessages.join(" "));
             }
             next();
@@ -37,13 +39,18 @@ exports.validateJobInput = withValidationErrors([
         .withMessage("invalid type value."),
 ]);
 exports.validateIdParam = withValidationErrors([
-    (0, express_validator_1.param)("id").custom(async (value) => {
+    (0, express_validator_1.param)("id").custom(async (value, { req }) => {
+        var _a;
         const isValidId = mongoose_1.default.Types.ObjectId.isValid(value);
         if (!isValidId)
             throw new customErrors_1.BadRequestError("Invalid MongoDB id.");
         const job = await JobModel_1.default.findById(value);
         if (!job)
             throw new customErrors_1.NotFoundError("No job found with this id.");
+        const isAdmin = req.user.role === "admin";
+        const isOwner = req.user.id === ((_a = job.createdBy) === null || _a === void 0 ? void 0 : _a.toString());
+        if (!isAdmin && !isOwner)
+            throw new customErrors_1.UnauthorizedError("Not authorized to access this route.");
     }),
 ]);
 exports.validateUserInput = withValidationErrors([

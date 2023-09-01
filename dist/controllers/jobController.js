@@ -7,11 +7,12 @@ exports.deleteJob = exports.updateJob = exports.getJob = exports.createJob = exp
 const http_status_codes_1 = require("http-status-codes");
 const JobModel_1 = __importDefault(require("../models/JobModel"));
 const getAllJobs = async (req, res, next) => {
-    const jobs = await JobModel_1.default.find();
+    const jobs = await JobModel_1.default.find({ createdBy: req.user.id });
     res.status(http_status_codes_1.StatusCodes.OK).json({ jobs });
 };
 exports.getAllJobs = getAllJobs;
 const createJob = async (req, res, next) => {
+    req.body.createdBy = req.user.id;
     const job = await JobModel_1.default.create(req.body);
     res.status(http_status_codes_1.StatusCodes.CREATED).json({ job });
 };
@@ -31,7 +32,7 @@ const updateJob = async (req, res, next) => {
 };
 exports.updateJob = updateJob;
 const deleteJob = async (req, res, next) => {
-    const removedJob = await JobModel_1.default.findByIdAndDelete(req.params.id);
-    res.status(http_status_codes_1.StatusCodes.OK).json({ message: "Job deleted.", job: removedJob });
+    const deletedJob = await JobModel_1.default.findByIdAndDelete(req.params.id);
+    res.status(http_status_codes_1.StatusCodes.OK).json({ message: "Job deleted.", job: deletedJob });
 };
 exports.deleteJob = deleteJob;

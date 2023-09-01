@@ -8,7 +8,11 @@ import {
 import mongoose from "mongoose";
 import Job from "../models/JobModel";
 import User from "../models/UserModel";
-import { BadRequestError, NotFoundError } from "../errors/customErrors";
+import {
+  BadRequestError,
+  NotFoundError,
+  UnauthorizedError,
+} from "../errors/customErrors";
 import { JOB_STATUS, JOB_TYPE } from "../utils/constants";
 
 const withValidationErrors = (validateValues: ValidationChain[]) => {
@@ -20,6 +24,8 @@ const withValidationErrors = (validateValues: ValidationChain[]) => {
         const errorMessages = errors.array().map((err: any) => err.msg);
         if (errorMessages[0].startsWith("No job"))
           throw new NotFoundError(errorMessages.join(" "));
+        if (errorMessages[0].startsWith("Not authorized"))
+          throw new UnauthorizedError(errorMessages.join(" "));
         throw new BadRequestError(errorMessages.join(" "));
       }
       next();
@@ -40,12 +46,18 @@ export const validateJobInput = withValidationErrors([
 ]);
 
 export const validateIdParam = withValidationErrors([
-  param("id").custom(async (value) => {
+  param("id").custom(async (value, { req }) => {
     const isValidId = mongoose.Types.ObjectId.isValid(value);
     if (!isValidId) throw new BadRequestError("Invalid MongoDB id.");
 
     const job = await Job.findById(value);
     if (!job) throw new NotFoundError("No job found with this id.");
+
+    const isAdmin = req.user.role === "admin";
+    const isOwner = req.user.id === job.createdBy?.toString();
+
+    if (!isAdmin && !isOwner)
+      throw new UnauthorizedError("Not authorized to access this route.");
   }),
 ]);
 
