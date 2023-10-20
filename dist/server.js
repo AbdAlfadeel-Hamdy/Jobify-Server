@@ -32,6 +32,7 @@ const express_1 = __importDefault(require("express"));
 const morgan_1 = __importDefault(require("morgan"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const cloudinary_1 = require("cloudinary");
 // Public
 const path_1 = __importDefault(require("path"));
 // Routers
@@ -43,6 +44,11 @@ const errorHandlerMiddleware_1 = __importDefault(require("./middlewares/errorHan
 const authMiddleware_1 = require("./middlewares/authMiddleware");
 dotenv.config();
 const app = (0, express_1.default)();
+cloudinary_1.v2.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.CLOUD_API_KEY,
+    api_secret: process.env.CLOUD_API_SECRET,
+});
 // const __dirname = dirname(fileURLToPath(import.meta.url));
 if (process.env.NODE_ENV === "development")
     app.use((0, morgan_1.default)("dev"));
@@ -53,7 +59,7 @@ app.use("/api/v1/auth", authRouter_1.default);
 app.use("/api/v1/jobs", authMiddleware_1.authenticateUser, jobRouter_1.default);
 app.use("/api/v1/users", authMiddleware_1.authenticateUser, userRouter_1.default);
 app.use("*", (req, res, next) => {
-    res.status(404).json({ message: "Not found." });
+    res.status(404).json({ message: "Route not found." });
 });
 app.use(errorHandlerMiddleware_1.default);
 const port = process.env.PORT || 5100;

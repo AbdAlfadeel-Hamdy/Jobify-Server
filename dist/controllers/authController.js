@@ -19,7 +19,9 @@ const register = async (req, res, next) => {
 exports.register = register;
 const login = async (req, res, next) => {
     const user = await UserModel_1.default.findOne({ email: req.body.email });
-    const isValidUser = user && (await (0, passwordUtils_1.comparePassword)(req.body.password, user.password));
+    const isValidUser = user &&
+        user.name &&
+        (await (0, passwordUtils_1.comparePassword)(req.body.password, user.password));
     if (!isValidUser)
         throw new customErrors_1.UnauthenticatedError("Invalid credentials.");
     const token = await (0, tokenUtils_1.createJWT)({ id: user.id, role: user.role });

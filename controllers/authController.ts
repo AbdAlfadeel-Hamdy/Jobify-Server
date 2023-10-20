@@ -19,7 +19,9 @@ export const login: Handler = async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
 
   const isValidUser =
-    user && (await comparePassword(req.body.password, user.password as string));
+    user &&
+    user.name &&
+    (await comparePassword(req.body.password, user.password as string));
   if (!isValidUser) throw new UnauthenticatedError("Invalid credentials.");
 
   const token = await createJWT({ id: user.id, role: user.role });
