@@ -4,7 +4,9 @@ import express from "express";
 import morgan from "morgan";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
-
+// Public
+import path, { dirname } from "path";
+import { fileURLToPath } from "url";
 // Routers
 import authRouter from "./routes/authRouter";
 import jobRouter from "./routes/jobRouter";
@@ -17,8 +19,11 @@ dotenv.config();
 
 const app = express();
 
+// const __dirname = dirname(fileURLToPath(import.meta.url));
+
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 
+app.use(express.static(path.resolve("./public")));
 app.use(express.json());
 app.use(cookieParser());
 

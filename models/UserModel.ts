@@ -17,6 +17,8 @@ const userSchema = new Schema({
     enum: ["user", "admin"],
     default: "user",
   },
+  avatar: String,
+  avatarPublicId: String,
 });
 
 userSchema.methods.toJSON = function () {
