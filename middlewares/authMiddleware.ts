@@ -12,7 +12,7 @@ export const authenticateUser: Handler = (req: any, res, next) => {
 
   try {
     const { id, role } = verifyJWT(token);
-    const testUser = id === "653501e317367f4ccd7188ec";
+    const testUser = id === "653518deac892e5109a854fb";
     req.user = { id, role, testUser };
     next();
   } catch (err) {

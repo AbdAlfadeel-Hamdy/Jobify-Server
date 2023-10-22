@@ -9,7 +9,7 @@ const authenticateUser = (req, res, next) => {
         throw new customErrors_1.UnauthenticatedError("Authentication failed.");
     try {
         const { id, role } = (0, tokenUtils_1.verifyJWT)(token);
-        const testUser = id === "653501e317367f4ccd7188ec";
+        const testUser = id === "653518deac892e5109a854fb";
         req.user = { id, role, testUser };
         next();
     }
