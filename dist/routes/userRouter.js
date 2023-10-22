@@ -11,5 +11,5 @@ const multerMiddleware_1 = __importDefault(require("../middlewares/multerMiddlew
 const router = (0, express_1.default)();
 router.get("/current-user", userController_1.getCurrentUser);
 router.get("/admin/app-stats", (0, authMiddleware_1.authorizePermissions)("admin"), userController_1.getApplicationStats);
-router.patch("/update-user", multerMiddleware_1.default.single("avatar"), validationMiddleware_1.validateUpdateUserInput, userController_1.updateUser);
+router.patch("/update-user", authMiddleware_1.checkForTestUser, multerMiddleware_1.default.single("avatar"), validationMiddleware_1.validateUpdateUserInput, userController_1.updateUser);
 exports.default = router;

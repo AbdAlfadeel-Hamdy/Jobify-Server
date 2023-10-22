@@ -6,7 +6,10 @@ import {
   updateUser,
 } from "../controllers/userController";
 import { validateUpdateUserInput } from "../middlewares/validationMiddleware";
-import { authorizePermissions } from "../middlewares/authMiddleware";
+import {
+  authorizePermissions,
+  checkForTestUser,
+} from "../middlewares/authMiddleware";
 import upload from "../middlewares/multerMiddleware";
 
 const router = Router();
@@ -19,6 +22,7 @@ router.get(
 );
 router.patch(
   "/update-user",
+  checkForTestUser,
   upload.single("avatar"),
   validateUpdateUserInput as ValidationChain[],
   updateUser

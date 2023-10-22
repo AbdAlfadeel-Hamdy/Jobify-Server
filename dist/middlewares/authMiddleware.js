@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.authorizePermissions = exports.authenticateUser = void 0;
+exports.checkForTestUser = exports.authorizePermissions = exports.authenticateUser = void 0;
 const customErrors_1 = require("../errors/customErrors");
 const tokenUtils_1 = require("../utils/tokenUtils");
 const authenticateUser = (req, res, next) => {
@@ -9,7 +9,8 @@ const authenticateUser = (req, res, next) => {
         throw new customErrors_1.UnauthenticatedError("Authentication failed.");
     try {
         const { id, role } = (0, tokenUtils_1.verifyJWT)(token);
-        req.user = { id, role };
+        const testUser = id === "653501e317367f4ccd7188ec";
+        req.user = { id, role, testUser };
         next();
     }
     catch (err) {
@@ -25,3 +26,9 @@ const authorizePermissions = (...roles) => {
     };
 };
 exports.authorizePermissions = authorizePermissions;
+const checkForTestUser = (req, res, next) => {
+    if (req.user.testUser)
+        throw new customErrors_1.BadRequestError("Demo User. Read Only!");
+    next();
+};
+exports.checkForTestUser = checkForTestUser;
