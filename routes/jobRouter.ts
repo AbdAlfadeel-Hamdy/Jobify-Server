@@ -6,6 +6,7 @@ import {
   getJob,
   updateJob,
   deleteJob,
+  showStats,
 } from "../controllers/jobController";
 import {
   validateIdParam,
@@ -19,6 +20,7 @@ router
   .route("/")
   .get(getAllJobs)
   .post(checkForTestUser, validateJobInput as ValidationChain[], createJob);
+router.route("/stats").get(showStats);
 router
   .route("/:id")
   .all(validateIdParam as ValidationChain[])

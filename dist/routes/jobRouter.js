@@ -9,6 +9,7 @@ router
     .route("/")
     .get(jobController_1.getAllJobs)
     .post(authMiddleware_1.checkForTestUser, validationMiddleware_1.validateJobInput, jobController_1.createJob);
+router.route("/stats").get(jobController_1.showStats);
 router
     .route("/:id")
     .all(validationMiddleware_1.validateIdParam)
