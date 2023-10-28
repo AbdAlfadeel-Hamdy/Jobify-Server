@@ -9,7 +9,7 @@ const mongoose_1 = require("mongoose");
 const dayjs_1 = __importDefault(require("dayjs"));
 const JobModel_1 = __importDefault(require("../models/JobModel"));
 const getAllJobs = async (req, res, next) => {
-    const { search, jobStatus, jobType } = req.query;
+    const { search, jobStatus, jobType, sort } = req.query;
     const filterObj = {
         createdBy: req.user.id,
     };
@@ -22,7 +22,14 @@ const getAllJobs = async (req, res, next) => {
         filterObj.jobStatus = jobStatus;
     if (jobType && jobType !== "all")
         filterObj.jobType = jobType;
-    const jobs = await JobModel_1.default.find(filterObj);
+    const sortOptions = {
+        newest: "-createdAt",
+        oldest: "createdAt",
+        "a-z": "position",
+        "z-a": "-position",
+    };
+    const sortKey = sortOptions[sort] || sortOptions.newest;
+    const jobs = await JobModel_1.default.find(filterObj).sort(sortKey);
     res.status(http_status_codes_1.StatusCodes.OK).json({ jobs });
 };
 exports.getAllJobs = getAllJobs;

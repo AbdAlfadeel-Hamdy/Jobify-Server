@@ -5,7 +5,7 @@ import day from "dayjs";
 import Job from "../models/JobModel";
 
 export const getAllJobs: Handler = async (req: any, res, next) => {
-  const { search, jobStatus, jobType } = req.query;
+  const { search, jobStatus, jobType, sort } = req.query;
   const filterObj: { [key: string]: any } = {
     createdBy: req.user.id,
   };
@@ -16,7 +16,15 @@ export const getAllJobs: Handler = async (req: any, res, next) => {
     ];
   if (jobStatus && jobStatus !== "all") filterObj.jobStatus = jobStatus;
   if (jobType && jobType !== "all") filterObj.jobType = jobType;
-  const jobs = await Job.find(filterObj);
+  const sortOptions = {
+    newest: "-createdAt",
+    oldest: "createdAt",
+    "a-z": "position",
+    "z-a": "-position",
+  };
+  const sortKey =
+    sortOptions[sort as keyof typeof sortOptions] || sortOptions.newest;
+  const jobs = await Job.find(filterObj).sort(sortKey);
   res.status(StatusCodes.OK).json({ jobs });
 };
 
