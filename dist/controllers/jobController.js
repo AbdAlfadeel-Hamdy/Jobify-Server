@@ -10,18 +10,20 @@ const dayjs_1 = __importDefault(require("dayjs"));
 const JobModel_1 = __importDefault(require("../models/JobModel"));
 const getAllJobs = async (req, res, next) => {
     const { search, jobStatus, jobType, sort } = req.query;
-    const filterObj = {
+    const page = +req.query.page || 1;
+    const limit = +req.query.limit || 10;
+    const queryObj = {
         createdBy: req.user.id,
     };
     if (search)
-        filterObj.$or = [
+        queryObj.$or = [
             { position: new RegExp(search, "i") },
             { company: { $regex: search, $options: "i" } },
         ];
     if (jobStatus && jobStatus !== "all")
-        filterObj.jobStatus = jobStatus;
+        queryObj.jobStatus = jobStatus;
     if (jobType && jobType !== "all")
-        filterObj.jobType = jobType;
+        queryObj.jobType = jobType;
     const sortOptions = {
         newest: "-createdAt",
         oldest: "createdAt",
@@ -29,8 +31,15 @@ const getAllJobs = async (req, res, next) => {
         "z-a": "-position",
     };
     const sortKey = sortOptions[sort] || sortOptions.newest;
-    const jobs = await JobModel_1.default.find(filterObj).sort(sortKey);
-    res.status(http_status_codes_1.StatusCodes.OK).json({ jobs });
+    const totalJobs = await JobModel_1.default.countDocuments(queryObj);
+    const jobs = await JobModel_1.default.find(queryObj)
+        .sort(sortKey)
+        .skip((page - 1) * limit)
+        .limit(limit);
+    const numOfPages = Math.ceil(totalJobs / limit);
+    res
+        .status(http_status_codes_1.StatusCodes.OK)
+        .json({ totalJobs, numOfPages, currentPage: page, jobs });
 };
 exports.getAllJobs = getAllJobs;
 const createJob = async (req, res, next) => {

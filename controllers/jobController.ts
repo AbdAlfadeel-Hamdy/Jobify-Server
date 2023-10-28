@@ -6,16 +6,18 @@ import Job from "../models/JobModel";
 
 export const getAllJobs: Handler = async (req: any, res, next) => {
   const { search, jobStatus, jobType, sort } = req.query;
-  const filterObj: { [key: string]: any } = {
+  const page = +req.query.page || 1;
+  const limit = +req.query.limit || 10;
+  const queryObj: { [key: string]: any } = {
     createdBy: req.user.id,
   };
   if (search)
-    filterObj.$or = [
+    queryObj.$or = [
       { position: new RegExp(search, "i") },
       { company: { $regex: search, $options: "i" } },
     ];
-  if (jobStatus && jobStatus !== "all") filterObj.jobStatus = jobStatus;
-  if (jobType && jobType !== "all") filterObj.jobType = jobType;
+  if (jobStatus && jobStatus !== "all") queryObj.jobStatus = jobStatus;
+  if (jobType && jobType !== "all") queryObj.jobType = jobType;
   const sortOptions = {
     newest: "-createdAt",
     oldest: "createdAt",
@@ -24,8 +26,15 @@ export const getAllJobs: Handler = async (req: any, res, next) => {
   };
   const sortKey =
     sortOptions[sort as keyof typeof sortOptions] || sortOptions.newest;
-  const jobs = await Job.find(filterObj).sort(sortKey);
-  res.status(StatusCodes.OK).json({ jobs });
+  const totalJobs = await Job.countDocuments(queryObj);
+  const jobs = await Job.find(queryObj)
+    .sort(sortKey)
+    .skip((page - 1) * limit)
+    .limit(limit);
+  const numOfPages = Math.ceil(totalJobs / limit);
+  res
+    .status(StatusCodes.OK)
+    .json({ totalJobs, numOfPages, currentPage: page, jobs });
 };
 
 export const createJob: Handler = async (req: any, res, next) => {
