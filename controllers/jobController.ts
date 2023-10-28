@@ -5,7 +5,18 @@ import day from "dayjs";
 import Job from "../models/JobModel";
 
 export const getAllJobs: Handler = async (req: any, res, next) => {
-  const jobs = await Job.find({ createdBy: req.user.id });
+  const { search, jobStatus, jobType } = req.query;
+  const filterObj: { [key: string]: any } = {
+    createdBy: req.user.id,
+  };
+  if (search)
+    filterObj.$or = [
+      { position: new RegExp(search, "i") },
+      { company: { $regex: search, $options: "i" } },
+    ];
+  if (jobStatus && jobStatus !== "all") filterObj.jobStatus = jobStatus;
+  if (jobType && jobType !== "all") filterObj.jobType = jobType;
+  const jobs = await Job.find(filterObj);
   res.status(StatusCodes.OK).json({ jobs });
 };
 
