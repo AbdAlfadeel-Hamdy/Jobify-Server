@@ -19,6 +19,7 @@ const register = async (req, res, next) => {
 exports.register = register;
 const login = async (req, res, next) => {
     const user = await UserModel_1.default.findOne({ email: req.body.email });
+    console.log(user);
     const isValidUser = user &&
         user.name &&
         (await (0, passwordUtils_1.comparePassword)(req.body.password, user.password));

@@ -17,6 +17,7 @@ export const register: Handler = async (req, res, next) => {
 
 export const login: Handler = async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
+  console.log(user);
 
   const isValidUser =
     user &&
