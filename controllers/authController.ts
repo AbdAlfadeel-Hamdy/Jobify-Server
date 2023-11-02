@@ -8,16 +8,14 @@ import { createJWT } from "../utils/tokenUtils";
 export const register: Handler = async (req, res, next) => {
   const isFirstAccount = (await User.countDocuments()) === 0;
   req.body.role = isFirstAccount ? "admin" : "user";
-
   req.body.password = await hashPassword(req.body.password);
 
-  const user = await User.create(req.body);
+  await User.create(req.body);
   res.status(StatusCodes.CREATED).json({ message: "User created." });
 };
 
 export const login: Handler = async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
-  console.log(user);
 
   const isValidUser =
     user &&
@@ -26,8 +24,8 @@ export const login: Handler = async (req, res, next) => {
   if (!isValidUser) throw new UnauthenticatedError("Invalid credentials.");
 
   const token = await createJWT({ id: user.id, role: user.role });
-
   const oneDay = 1000 * 60 * 60 * 24;
+  console.log(token);
 
   res.cookie("token", token, {
     httpOnly: true,

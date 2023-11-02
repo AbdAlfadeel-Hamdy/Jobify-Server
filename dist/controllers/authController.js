@@ -13,13 +13,12 @@ const register = async (req, res, next) => {
     const isFirstAccount = (await UserModel_1.default.countDocuments()) === 0;
     req.body.role = isFirstAccount ? "admin" : "user";
     req.body.password = await (0, passwordUtils_1.hashPassword)(req.body.password);
-    const user = await UserModel_1.default.create(req.body);
+    await UserModel_1.default.create(req.body);
     res.status(http_status_codes_1.StatusCodes.CREATED).json({ message: "User created." });
 };
 exports.register = register;
 const login = async (req, res, next) => {
     const user = await UserModel_1.default.findOne({ email: req.body.email });
-    console.log(user);
     const isValidUser = user &&
         user.name &&
         (await (0, passwordUtils_1.comparePassword)(req.body.password, user.password));
@@ -27,6 +26,7 @@ const login = async (req, res, next) => {
         throw new customErrors_1.UnauthenticatedError("Invalid credentials.");
     const token = await (0, tokenUtils_1.createJWT)({ id: user.id, role: user.role });
     const oneDay = 1000 * 60 * 60 * 24;
+    console.log(token);
     res.cookie("token", token, {
         httpOnly: true,
         expires: new Date(Date.now() + oneDay),
