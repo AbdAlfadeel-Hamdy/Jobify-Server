@@ -65,7 +65,7 @@ if (process.env.NODE_ENV === "production") {
         optionsSuccessStatus: 204,
     };
     app.use((0, cors_1.default)(corsOptions));
-    app.options("*", (0, cors_1.default)(corsOptions));
+    // app.options("*", cors(corsOptions));
 }
 app.use("/api/v1/auth", authRouter_1.default);
 app.use("/api/v1/jobs", authMiddleware_1.authenticateUser, jobRouter_1.default);

@@ -4,7 +4,7 @@ import express from "express";
 import morgan from "morgan";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
-import cors from "cors";
+import cors, { CorsOptions } from "cors";
 import { v2 as cloudinary } from "cloudinary";
 // Public
 import path, { dirname } from "path";
@@ -34,7 +34,7 @@ app.use(express.static(path.resolve("./public")));
 app.use(express.json());
 app.use(cookieParser());
 if (process.env.NODE_ENV === "production") {
-  const corsOptions = {
+  const corsOptions: CorsOptions = {
     origin: ["https://jobify-e5da.onrender.com/"],
     methods: "GET, POST, PATCH, DELETE",
     credentials: true,
@@ -42,7 +42,7 @@ if (process.env.NODE_ENV === "production") {
     optionsSuccessStatus: 204,
   };
   app.use(cors(corsOptions));
-  app.options("*", cors(corsOptions));
+  // app.options("*", cors(corsOptions));
 }
 
 app.use("/api/v1/auth", authRouter);
