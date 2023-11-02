@@ -41,6 +41,7 @@ export const logout: Handler = (req, res, next) => {
   res.cookie("token", "logout", {
     httpOnly: true,
     expires: new Date(Date.now()),
+    secure: req.secure,
   });
   res.status(StatusCodes.OK).json({ message: "User logged out." });
 };
