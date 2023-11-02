@@ -5,6 +5,7 @@ const customErrors_1 = require("../errors/customErrors");
 const tokenUtils_1 = require("../utils/tokenUtils");
 const authenticateUser = (req, res, next) => {
     const { token } = req.cookies;
+    console.log(token);
     if (!token)
         throw new customErrors_1.UnauthenticatedError("Authentication failed.");
     try {
