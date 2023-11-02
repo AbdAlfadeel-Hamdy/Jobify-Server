@@ -36,11 +36,10 @@ app.use(cookieParser());
 if (process.env.NODE_ENV === "production") {
   app.use(
     cors({
-      origin: true,
+      origin: "https://jobify-e5da.onrender.com/",
       credentials: true,
     })
   );
-  app.options("*", cors());
 }
 
 app.use("/api/v1/auth", authRouter);
