@@ -58,7 +58,7 @@ app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
 if (process.env.NODE_ENV === "production") {
     const corsOptions = {
-        origin: true,
+        origin: "https://jobify-e5da.onrender.com",
         // methods: "GET, POST, PATCH, DELETE",
         credentials: true,
         // allowedHeaders: ["Authorization", "Content-Type", "Set-Cookie", ""],
