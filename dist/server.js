@@ -67,7 +67,7 @@ app.use("*", (req, res, next) => {
     res.status(404).json({ message: "Route not found." });
 });
 app.use(errorHandlerMiddleware_1.default);
-const port = process.env.PORT || 5100;
+const port = 5100;
 if (!process.env.MONGO_URL) {
     console.log("MongoDB URL is not valid.");
     process.exit(1);

@@ -50,7 +50,7 @@ app.use("*", (req, res, next) => {
 
 app.use(errorHandlerMiddleware);
 
-const port = process.env.PORT || 5100;
+const port = 5100;
 
 if (!process.env.MONGO_URL) {
   console.log("MongoDB URL is not valid.");
