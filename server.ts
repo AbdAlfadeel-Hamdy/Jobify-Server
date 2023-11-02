@@ -42,6 +42,7 @@ if (process.env.NODE_ENV === "production") {
     optionsSuccessStatus: 204,
   };
   app.use(cors(corsOptions));
+  app.options("*", cors(corsOptions));
 }
 
 app.use("/api/v1/auth", authRouter);
