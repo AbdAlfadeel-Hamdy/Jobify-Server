@@ -1,8 +1,8 @@
 import { Handler } from "express";
-import { promises as fs } from "fs";
 import { StatusCodes } from "http-status-codes";
 import { v2 as cloudinary } from "cloudinary";
 import User from "../models/UserModel";
+import { formatImage } from "../middlewares/multerMiddleware";
 
 export const getCurrentUser: Handler = async (req: any, res, next) => {
   const user = await User.findById(req.user.id);
@@ -17,17 +17,20 @@ export const getApplicationStats: Handler = async (req, res, next) => {
 export const updateUser: Handler = async (req: any, res, next) => {
   const newUser = req.body;
   delete newUser.password;
+
   if (req.file) {
-    const { secure_url, public_id } = await cloudinary.uploader.upload(
-      req.file.path
-    );
-    await fs.unlink(req.file.path);
+    const file = formatImage(req.file);
+    const { secure_url, public_id } = await cloudinary.uploader.upload(file);
     newUser.avatar = secure_url;
+    // Needed to allow deleting old image on update avatar
     newUser.avatarPublicId = public_id;
   }
+
   const oldUser = await User.findByIdAndUpdate(req.user.id, newUser);
-  if (req.file && oldUser?.avatarPublicId) {
+
+  // Delete old image on Cloudinary on update avatar
+  if (req.file && oldUser?.avatarPublicId)
     await cloudinary.uploader.destroy(oldUser.avatarPublicId);
-  }
+
   res.status(StatusCodes.OK).json({ message: "User updated successfully" });
 };

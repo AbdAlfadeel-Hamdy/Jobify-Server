@@ -34,8 +34,6 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const cors_1 = __importDefault(require("cors"));
 const cloudinary_1 = require("cloudinary");
-// Public
-const path_1 = __importDefault(require("path"));
 // Routers
 const authRouter_1 = __importDefault(require("./routes/authRouter"));
 const jobRouter_1 = __importDefault(require("./routes/jobRouter"));
@@ -43,30 +41,39 @@ const userRouter_1 = __importDefault(require("./routes/userRouter"));
 // Middlewares
 const errorHandlerMiddleware_1 = __importDefault(require("./middlewares/errorHandlerMiddleware"));
 const authMiddleware_1 = require("./middlewares/authMiddleware");
+// Reading Environment Variables
 dotenv.config();
+// Running Express
 const app = (0, express_1.default)();
+// Setting Up Cloudinary
 cloudinary_1.v2.config({
     cloud_name: process.env.CLOUD_NAME,
     api_key: process.env.CLOUD_API_KEY,
     api_secret: process.env.CLOUD_API_SECRET,
 });
-// const __dirname = dirname(fileURLToPath(import.meta.url));
+// Morgan Middleware for Development
 if (process.env.NODE_ENV === "development")
     app.use((0, morgan_1.default)("dev"));
-app.use(express_1.default.static(path_1.default.resolve("./public")));
+// Body Parser
 app.use(express_1.default.json());
+// Cookies Parser
 app.use((0, cookie_parser_1.default)());
+// Cors
 app.use((0, cors_1.default)({
     origin: true,
     credentials: true,
 }));
+// Routes
 app.use("/api/v1/auth", authRouter_1.default);
 app.use("/api/v1/jobs", authMiddleware_1.authenticateUser, jobRouter_1.default);
 app.use("/api/v1/users", authMiddleware_1.authenticateUser, userRouter_1.default);
+// Not Found Route
 app.use("*", (req, res, next) => {
     res.status(404).json({ message: "Route not found." });
 });
+// Global Error Handling Middleware
 app.use(errorHandlerMiddleware_1.default);
+// Connecting to Database and Running Server
 const port = 5100;
 if (!process.env.MONGO_URL) {
     console.log("MongoDB URL is not valid.");

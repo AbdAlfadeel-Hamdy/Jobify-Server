@@ -26,7 +26,6 @@ const login = async (req, res, next) => {
         throw new customErrors_1.UnauthenticatedError("Invalid credentials.");
     const token = await (0, tokenUtils_1.createJWT)({ id: user.id, role: user.role });
     const oneDay = 1000 * 60 * 60 * 24;
-    console.log(token);
     res.cookie("token", token, {
         httpOnly: true,
         expires: new Date(Date.now() + oneDay),
