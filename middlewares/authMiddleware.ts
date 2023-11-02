@@ -10,6 +10,7 @@ export const authenticateUser: Handler = (req: any, res, next) => {
   const { token } = req.cookies;
   console.log(token);
   if (!token) throw new UnauthenticatedError("Authentication failed.");
+  console.log("test");
 
   try {
     const { id, role } = verifyJWT(token);

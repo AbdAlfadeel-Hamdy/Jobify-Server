@@ -8,6 +8,7 @@ const authenticateUser = (req, res, next) => {
     console.log(token);
     if (!token)
         throw new customErrors_1.UnauthenticatedError("Authentication failed.");
+    console.log("test");
     try {
         const { id, role } = (0, tokenUtils_1.verifyJWT)(token);
         const testUser = id === "653518deac892e5109a854fb";
