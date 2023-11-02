@@ -58,7 +58,7 @@ app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
 if (process.env.NODE_ENV === "production") {
     app.use((0, cors_1.default)({
-        origin: "https://jobify-e5da.onrender.com/",
+        origin: "https://jobify-e5da.onrender.com",
         credentials: true,
     }));
 }
