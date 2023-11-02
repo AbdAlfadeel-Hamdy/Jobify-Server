@@ -34,15 +34,15 @@ app.use(express.static(path.resolve("./public")));
 app.use(express.json());
 app.use(cookieParser());
 if (process.env.NODE_ENV === "production") {
-  const corsOptions: CorsOptions = {
-    origin: ["https://jobify-e5da.onrender.com/"],
-    methods: "GET, POST, PATCH, DELETE",
-    credentials: true,
-    allowedHeaders: ["Authorization", "Content-Type", "Set-Cookie"],
-    optionsSuccessStatus: 204,
-  };
-  app.use(cors(corsOptions));
-  // app.options("*", cors(corsOptions));
+  // const corsOptions: CorsOptions = {
+  //   origin: ["https://jobify-e5da.onrender.com/"],
+  //   methods: "GET, POST, PATCH, DELETE",
+  //   credentials: true,
+  //   allowedHeaders: ["Authorization", "Content-Type", "Set-Cookie", ""],
+  //   optionsSuccessStatus: 204,
+  // };
+  // app.use(cors(corsOptions));
+  app.use(cors({ origin: "*" }));
 }
 
 app.use("/api/v1/auth", authRouter);

@@ -57,15 +57,15 @@ app.use(express_1.default.static(path_1.default.resolve("./public")));
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
 if (process.env.NODE_ENV === "production") {
-    const corsOptions = {
-        origin: ["https://jobify-e5da.onrender.com/"],
-        methods: "GET, POST, PATCH, DELETE",
-        credentials: true,
-        allowedHeaders: ["Authorization", "Content-Type", "Set-Cookie"],
-        optionsSuccessStatus: 204,
-    };
-    app.use((0, cors_1.default)(corsOptions));
-    // app.options("*", cors(corsOptions));
+    // const corsOptions: CorsOptions = {
+    //   origin: ["https://jobify-e5da.onrender.com/"],
+    //   methods: "GET, POST, PATCH, DELETE",
+    //   credentials: true,
+    //   allowedHeaders: ["Authorization", "Content-Type", "Set-Cookie", ""],
+    //   optionsSuccessStatus: 204,
+    // };
+    // app.use(cors(corsOptions));
+    app.use((0, cors_1.default)({ origin: "*" }));
 }
 app.use("/api/v1/auth", authRouter_1.default);
 app.use("/api/v1/jobs", authMiddleware_1.authenticateUser, jobRouter_1.default);
