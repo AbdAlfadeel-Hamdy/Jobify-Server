@@ -38,6 +38,7 @@ if (process.env.NODE_ENV === "production")
     cors({
       origin: true,
       credentials: true,
+      allowedHeaders: ["Authorization", "Content-Type", "Set-Cookie"],
     })
   );
 
