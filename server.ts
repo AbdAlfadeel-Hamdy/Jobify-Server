@@ -4,7 +4,6 @@ import express from "express";
 import morgan from "morgan";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
-import cors from "cors";
 import { v2 as cloudinary } from "cloudinary";
 // Public
 import path, { dirname } from "path";
@@ -33,12 +32,6 @@ if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 app.use(express.static(path.resolve("./public")));
 app.use(express.json());
 app.use(cookieParser());
-app.use(
-  cors({
-    origin: true,
-    credentials: true,
-  })
-);
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/jobs", authenticateUser, jobRouter);
