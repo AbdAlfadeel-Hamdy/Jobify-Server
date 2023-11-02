@@ -33,14 +33,13 @@ if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 app.use(express.static(path.resolve("./public")));
 app.use(express.json());
 app.use(cookieParser());
-if (process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV === "production")
   app.use(
     cors({
-      origin: "https://jobify-e5da.onrender.com",
+      origin: true,
       credentials: true,
     })
   );
-}
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/jobs", authenticateUser, jobRouter);
