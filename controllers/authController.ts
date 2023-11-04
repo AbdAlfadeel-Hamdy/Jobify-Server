@@ -29,7 +29,7 @@ export const login: Handler = async (req, res, next) => {
   res.cookie("token", token, {
     httpOnly: true,
     expires: new Date(Date.now() + oneDay),
-    secure: req.secure,
+    // secure: req.secure,
   });
   res.status(StatusCodes.OK).json({ message: "User logged in." });
 };
@@ -38,7 +38,7 @@ export const logout: Handler = (req, res, next) => {
   res.cookie("token", "logout", {
     httpOnly: true,
     expires: new Date(Date.now()),
-    secure: req.secure,
+    // secure: req.secure,
   });
   res.status(StatusCodes.OK).json({ message: "User logged out." });
 };
