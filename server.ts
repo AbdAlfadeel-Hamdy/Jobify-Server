@@ -17,6 +17,19 @@ import { authenticateUser } from "./middlewares/authMiddleware";
 dotenv.config();
 // Running Express
 const app = express();
+// Cors
+const corsOptions = {
+  origin: [
+    "https://jobify-e5da.onrender.com/",
+    "https://jobify-e5da.onrender.com",
+  ],
+  methods: "GET, POST, PATCH, DELETE",
+  credentials: true,
+  allowedHeaders: ["Authorization", "Content-Type", "Set-Cookie"],
+  optionsSuccessStatus: 204,
+};
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 // Setting Up Cloudinary
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -29,13 +42,6 @@ if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 app.use(express.json());
 // Cookies Parser
 app.use(cookieParser());
-// Cors
-app.use(
-  cors({
-    origin: true,
-    credentials: true,
-  })
-);
 // Routes
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/jobs", authenticateUser, jobRouter);
