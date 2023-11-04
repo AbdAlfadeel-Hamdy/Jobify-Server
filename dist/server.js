@@ -47,14 +47,14 @@ dotenv.config();
 const app = (0, express_1.default)();
 // Cors
 const corsOptions = {
-    origin: ["https://jobify-e5da.onrender.com"],
-    methods: "GET, POST, PATCH, DELETE",
+    origin: ["http://localhost:5173", "https://jobify-e5da.onrender.com"],
+    // methods: "GET, POST, PATCH, DELETE",
     credentials: true,
-    allowedHeaders: ["Authorization", "Content-Type", "Set-Cookie"],
-    optionsSuccessStatus: 204,
+    // allowedHeaders: ["Authorization", "Content-Type", "Set-Cookie"],
+    // optionsSuccessStatus: 204,
 };
 app.use((0, cors_1.default)(corsOptions));
-app.options("*", (0, cors_1.default)(corsOptions));
+// app.options("*", cors(corsOptions));
 // Setting Up Cloudinary
 cloudinary_1.v2.config({
     cloud_name: process.env.CLOUD_NAME,
