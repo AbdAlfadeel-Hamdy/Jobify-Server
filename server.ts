@@ -19,8 +19,8 @@ dotenv.config();
 const app = express();
 // Cors
 const corsOptions = {
-  origin: ["http://localhost:5173", "https://jobify-e5da.onrender.com"],
-  // credentials: true,
+  origin: "https://jobify-e5da.onrender.com",
+  credentials: true,
 };
 app.use(cors(corsOptions));
 // Setting Up Cloudinary
