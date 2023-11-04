@@ -25,10 +25,12 @@ const updateUser = async (req, res, next) => {
     delete newUser.password;
     if (req.file) {
         const file = (0, multerMiddleware_1.formatImage)(req.file);
-        const { secure_url, public_id } = await cloudinary_1.v2.uploader.upload(file);
-        newUser.avatar = secure_url;
-        // Needed to allow deleting old image on update avatar
-        newUser.avatarPublicId = public_id;
+        if (file) {
+            const { secure_url, public_id } = await cloudinary_1.v2.uploader.upload(file);
+            newUser.avatar = secure_url;
+            // Needed to allow deleting old image on update avatar
+            newUser.avatarPublicId = public_id;
+        }
     }
     const oldUser = await UserModel_1.default.findByIdAndUpdate(req.user.id, newUser);
     // Delete old image on Cloudinary on update avatar

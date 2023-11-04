@@ -20,10 +20,12 @@ export const updateUser: Handler = async (req: any, res, next) => {
 
   if (req.file) {
     const file = formatImage(req.file);
-    const { secure_url, public_id } = await cloudinary.uploader.upload(file);
-    newUser.avatar = secure_url;
-    // Needed to allow deleting old image on update avatar
-    newUser.avatarPublicId = public_id;
+    if (file) {
+      const { secure_url, public_id } = await cloudinary.uploader.upload(file);
+      newUser.avatar = secure_url;
+      // Needed to allow deleting old image on update avatar
+      newUser.avatarPublicId = public_id;
+    }
   }
 
   const oldUser = await User.findByIdAndUpdate(req.user.id, newUser);
