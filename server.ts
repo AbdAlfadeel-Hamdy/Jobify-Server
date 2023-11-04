@@ -20,13 +20,9 @@ const app = express();
 // Cors
 const corsOptions = {
   origin: ["http://localhost:5173", "https://jobify-e5da.onrender.com"],
-  // methods: "GET, POST, PATCH, DELETE",
-  credentials: true,
-  // allowedHeaders: ["Authorization", "Content-Type", "Set-Cookie"],
-  // optionsSuccessStatus: 204,
+  // credentials: true,
 };
 app.use(cors(corsOptions));
-// app.options("*", cors(corsOptions));
 // Setting Up Cloudinary
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
