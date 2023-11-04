@@ -22,6 +22,12 @@ const corsOptions = {
   origin: [
     "https://jobify-e5da.onrender.com/",
     "https://jobify-e5da.onrender.com",
+    "44.226.145.213",
+    "54.187.200.255",
+    "34.213.214.55",
+    "35.164.95.156",
+    "44.230.95.183",
+    "44.229.200.200",
   ],
   methods: "GET, POST, PATCH, DELETE",
   credentials: true,
