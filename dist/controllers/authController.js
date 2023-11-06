@@ -29,7 +29,7 @@ const login = async (req, res, next) => {
     res.cookie("token", token, {
         httpOnly: true,
         expires: new Date(Date.now() + oneDay),
-        secure: req.secure,
+        secure: true,
         sameSite: "none",
     });
     res.status(http_status_codes_1.StatusCodes.OK).json({ message: "User logged in." });
