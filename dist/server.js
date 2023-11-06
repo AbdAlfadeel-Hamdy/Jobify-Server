@@ -51,6 +51,7 @@ const corsOptions = {
     credentials: true,
 };
 app.use((0, cors_1.default)(corsOptions));
+app.options("*", (0, cors_1.default)(corsOptions));
 // Setting Up Cloudinary
 cloudinary_1.v2.config({
     cloud_name: process.env.CLOUD_NAME,

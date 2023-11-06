@@ -23,6 +23,7 @@ const corsOptions: CorsOptions = {
   credentials: true,
 };
 app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 // Setting Up Cloudinary
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
