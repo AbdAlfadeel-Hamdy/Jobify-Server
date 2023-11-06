@@ -19,7 +19,7 @@ dotenv.config();
 const app = express();
 // Cors
 const corsOptions: CorsOptions = {
-  origin: "https://jobify-e5da.onrender.com",
+  origin: ["https://jobify-e5da.onrender.com"],
   credentials: true,
   methods: "GET, POST, PATCH, DELETE",
   allowedHeaders: ["Authorization", "Content-Type", "Set-Cookie"],
