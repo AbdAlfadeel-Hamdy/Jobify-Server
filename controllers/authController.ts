@@ -32,6 +32,7 @@ export const login: Handler = async (req, res, next) => {
     secure: req.secure,
     sameSite: "none",
   });
+  console.log("Test");
   res.status(StatusCodes.OK).json({ message: "User logged in." });
 };
 
