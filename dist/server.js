@@ -49,6 +49,9 @@ const app = (0, express_1.default)();
 const corsOptions = {
     origin: "https://jobify-e5da.onrender.com",
     credentials: true,
+    methods: "GET, POST, PATCH, DELETE",
+    allowedHeaders: ["Authorization", "Content-Type", "Set-Cookie"],
+    optionsSuccessStatus: 204,
 };
 app.use((0, cors_1.default)(corsOptions));
 app.options("*", (0, cors_1.default)(corsOptions));
