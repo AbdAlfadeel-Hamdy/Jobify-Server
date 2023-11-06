@@ -32,6 +32,7 @@ const express_1 = __importDefault(require("express"));
 const morgan_1 = __importDefault(require("morgan"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const cors_1 = __importDefault(require("cors"));
 const cloudinary_1 = require("cloudinary");
 // Routers
 const authRouter_1 = __importDefault(require("./routes/authRouter"));
@@ -45,11 +46,11 @@ dotenv.config();
 // Running Express
 const app = (0, express_1.default)();
 // Cors
-// const corsOptions: CorsOptions = {
-//   origin: "https://jobify-e5da.onrender.com",
-//   credentials: true,
-// };
-// app.use(cors(corsOptions));
+const corsOptions = {
+    origin: "https://jobify-e5da.onrender.com",
+    credentials: true,
+};
+app.use((0, cors_1.default)(corsOptions));
 // Setting Up Cloudinary
 cloudinary_1.v2.config({
     cloud_name: process.env.CLOUD_NAME,

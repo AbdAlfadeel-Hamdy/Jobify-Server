@@ -18,11 +18,11 @@ dotenv.config();
 // Running Express
 const app = express();
 // Cors
-// const corsOptions: CorsOptions = {
-//   origin: "https://jobify-e5da.onrender.com",
-//   credentials: true,
-// };
-// app.use(cors(corsOptions));
+const corsOptions: CorsOptions = {
+  origin: "https://jobify-e5da.onrender.com",
+  credentials: true,
+};
+app.use(cors(corsOptions));
 // Setting Up Cloudinary
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
