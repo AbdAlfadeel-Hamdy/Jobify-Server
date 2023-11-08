@@ -33,6 +33,8 @@ const morgan_1 = __importDefault(require("morgan"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const cors_1 = __importDefault(require("cors"));
+const helmet_1 = __importDefault(require("helmet"));
+const express_mongo_sanitize_1 = __importDefault(require("express-mongo-sanitize"));
 const cloudinary_1 = require("cloudinary");
 // Routers
 const authRouter_1 = __importDefault(require("./routes/authRouter"));
@@ -51,6 +53,9 @@ const corsOptions = {
     credentials: true,
 };
 app.use((0, cors_1.default)(corsOptions));
+// Security Middlewares
+app.use((0, helmet_1.default)());
+app.use((0, express_mongo_sanitize_1.default)());
 // Setting Up Cloudinary
 cloudinary_1.v2.config({
     cloud_name: process.env.CLOUD_NAME,

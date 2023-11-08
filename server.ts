@@ -5,6 +5,8 @@ import morgan from "morgan";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import cors, { CorsOptions } from "cors";
+import helmet from "helmet";
+import mongoSanitize from "express-mongo-sanitize";
 import { v2 as cloudinary } from "cloudinary";
 // Routers
 import authRouter from "./routes/authRouter";
@@ -23,6 +25,9 @@ const corsOptions: CorsOptions = {
   credentials: true,
 };
 app.use(cors(corsOptions));
+// Security Middlewares
+app.use(helmet());
+app.use(mongoSanitize());
 // Setting Up Cloudinary
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
