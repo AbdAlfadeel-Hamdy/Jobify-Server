@@ -8,14 +8,14 @@ import cors, { CorsOptions } from 'cors';
 import helmet from 'helmet';
 import mongoSanitize from 'express-mongo-sanitize';
 import { v2 as cloudinary } from 'cloudinary';
-// Routers
-import authRouter from './routes/authRouter.js';
-import jobRouter from './routes/jobRouter.js';
-import userRouter from './routes/userRouter.js';
+// ROUTERS
+import authRouter from './routes/auth.js';
+import jobRouter from './routes/job.js';
+import userRouter from './routes/user.js';
 // Middlewares
-import errorHandlerMiddleware from './middlewares/errorHandlerMiddleware.js';
-import { authenticateUser } from './middlewares/authMiddleware.js';
-// Access Environment Variables
+import errorHandlerMiddleware from './middlewares/errorHandler.js';
+import { authenticateUser } from './middlewares/auth.js';
+// Access .env files
 dotenv.config();
 // Create HTTP Server
 const app = express();
@@ -28,7 +28,7 @@ app.use(cors(corsOptions));
 // Security Packages
 app.use(helmet());
 app.use(mongoSanitize());
-// Setting Up Cloudinary
+// Setting up Cloudinary
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.CLOUD_API_KEY,
@@ -44,24 +44,20 @@ app.use(cookieParser());
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/jobs', authenticateUser, jobRouter);
 app.use('/api/v1/users', authenticateUser, userRouter);
-// Not Found Route
+// NOT FOUND Handler
 app.use('*', (req, res, next) => {
   res.status(404).json({ message: 'Route not found.' });
 });
 // Global Error Handler
 app.use(errorHandlerMiddleware);
-// Connect to Database and Start Listening
-const port = process.env.PORT || 5000;
-if (!process.env.MONGO_URL) {
-  console.log('MongoDB URL is not valid.');
-  process.exit(1);
-}
+// Connect to Database and Start listening
 try {
-  await mongoose.connect(process.env.MONGO_URL);
-  app.listen(port, () => {
-    console.log(`Server running on PORT ${port}...`);
-  });
-} catch (err) {
-  console.log(err);
+  await mongoose.connect(process.env.MONGO_URI!);
+  const port = process.env.PORT || 5000;
+  app.listen(port, () =>
+    console.log(`Server started listening on PORT ${port}...`)
+  );
+} catch (error) {
+  console.log(error);
   process.exit(1);
 }

@@ -4,7 +4,7 @@ import {
   UnauthenticatedError,
   UnauthorizedError,
 } from '../errors/customErrors.js';
-import { verifyJWT } from '../utils/tokenUtils.js';
+import { verifyJWT } from '../utils/token.js';
 
 export const authenticateUser: Handler = (req: any, res, next) => {
   const { token } = req.cookies;

@@ -2,7 +2,7 @@
   "name": "jobify-server",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/server.js",
+  "main": "app.ts",
   "type": "module",
   "scripts": {
     "build": "npm install && npx tsc",

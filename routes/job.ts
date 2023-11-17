@@ -7,12 +7,12 @@ import {
   updateJob,
   deleteJob,
   showStats,
-} from '../controllers/jobController.js';
+} from '../controllers/job.js';
 import {
   validateIdParam,
   validateJobInput,
-} from '../middlewares/validationMiddleware.js';
-import { checkForTestUser } from '../middlewares/authMiddleware.js';
+} from '../middlewares/validation.js';
+import { checkForTestUser } from '../middlewares/auth.js';
 
 const router = Router();
 

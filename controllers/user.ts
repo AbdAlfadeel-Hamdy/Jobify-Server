@@ -1,8 +1,8 @@
 import { Handler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { v2 as cloudinary } from 'cloudinary';
-import User from '../models/UserModel.js';
-import { formatImage } from '../middlewares/multerMiddleware.js';
+import User from '../models/User.js';
+import { formatImage } from '../middlewares/multer.js';
 
 export const getCurrentUser: Handler = async (req: any, res, next) => {
   const user = await User.findById(req.user.id);

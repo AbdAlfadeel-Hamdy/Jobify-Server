@@ -1,11 +1,11 @@
 import Router from 'express';
 import rateLimiter from 'express-rate-limit';
 import { ValidationChain } from 'express-validator';
-import { login, logout, register } from '../controllers/authController.js';
+import { login, logout, register } from '../controllers/auth.js';
 import {
   validateLoginInput,
   validateUserInput,
-} from '../middlewares/validationMiddleware.js';
+} from '../middlewares/validation.js';
 
 const router = Router();
 

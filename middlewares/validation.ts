@@ -4,10 +4,11 @@ import {
   param,
   validationResult,
   ValidationChain,
+  ValidationError,
 } from 'express-validator';
 import mongoose from 'mongoose';
-import Job from '../models/JobModel.js';
-import User from '../models/UserModel.js';
+import Job from '../models/Job.js';
+import User from '../models/User.js';
 import {
   BadRequestError,
   NotFoundError,
@@ -20,8 +21,11 @@ const withValidationErrors = (validateValues: ValidationChain[]) => {
     validateValues,
     (req: Request, res: Response, next: NextFunction) => {
       const errors = validationResult(req);
+      console.log(errors);
       if (!errors.isEmpty()) {
-        const errorMessages = errors.array().map((err: any) => err.msg);
+        const errorMessages = errors
+          .array()
+          .map((err: ValidationError) => err.msg);
         if (errorMessages[0].startsWith('No job'))
           throw new NotFoundError(errorMessages.join(' '));
         if (errorMessages[0].startsWith('Not authorized'))
@@ -68,7 +72,7 @@ export const validateUserInput = withValidationErrors([
     .withMessage('Email is required.')
     .isEmail()
     .withMessage('Invalid email format.')
-    .custom(async (email) => {
+    .custom(async (email: string) => {
       const user = await User.findOne({ email });
       if (user) throw new BadRequestError('Email already exists.');
     }),
@@ -101,7 +105,7 @@ export const validateUpdateUserInput = withValidationErrors([
     .withMessage('Email is required.')
     .isEmail()
     .withMessage('Invalid email format.')
-    .custom(async (email, { req }) => {
+    .custom(async (email: string, { req }) => {
       const user = await User.findOne({ email });
       if (user && user._id.toString() !== req.user.id)
         throw new BadRequestError('Email already exists.');

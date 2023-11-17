@@ -1,20 +1,23 @@
 import { Handler } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import User from '../models/UserModel.js';
-import { comparePassword, hashPassword } from '../utils/passwordUtils.js';
+import User from '../models/User.js';
+import { comparePassword, hashPassword } from '../utils/password.js';
 import { UnauthenticatedError } from '../errors/customErrors.js';
-import { createJWT } from '../utils/tokenUtils.js';
+import { createJWT } from '../utils/token.js';
 
-export const register: Handler = async (req, res, next) => {
+// Register
+export const register: Handler = async (req, res) => {
   const isFirstAccount = (await User.countDocuments()) === 0;
   req.body.role = isFirstAccount ? 'admin' : 'user';
+
   req.body.password = await hashPassword(req.body.password);
 
   await User.create(req.body);
   res.status(StatusCodes.CREATED).json({ message: 'User created.' });
 };
 
-export const login: Handler = async (req, res, next) => {
+// Login
+export const login: Handler = async (req, res) => {
   const user = await User.findOne({ email: req.body.email });
 
   const isValidUser =
@@ -32,15 +35,18 @@ export const login: Handler = async (req, res, next) => {
     secure: true,
     sameSite: 'none',
   });
+
   res.status(StatusCodes.OK).json({ message: 'User logged in.' });
 };
 
-export const logout: Handler = (req, res, next) => {
+// Logout
+export const logout: Handler = (req, res) => {
   res.cookie('token', 'logout', {
     httpOnly: true,
     expires: new Date(Date.now()),
     secure: true,
     sameSite: 'none',
   });
+
   res.status(StatusCodes.OK).json({ message: 'User logged out.' });
 };

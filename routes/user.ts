@@ -4,13 +4,10 @@ import {
   getApplicationStats,
   getCurrentUser,
   updateUser,
-} from '../controllers/userController.js';
-import { validateUpdateUserInput } from '../middlewares/validationMiddleware.js';
-import {
-  authorizePermissions,
-  checkForTestUser,
-} from '../middlewares/authMiddleware.js';
-import upload from '../middlewares/multerMiddleware.js';
+} from '../controllers/user.js';
+import { validateUpdateUserInput } from '../middlewares/validation.js';
+import { authorizePermissions, checkForTestUser } from '../middlewares/auth.js';
+import upload from '../middlewares/multer.js';
 
 const router = Router();
 

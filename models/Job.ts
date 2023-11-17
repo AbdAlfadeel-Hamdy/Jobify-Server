@@ -1,7 +1,7 @@
 import { Schema, model, Types } from 'mongoose';
 import { JOB_STATUS, JOB_TYPE } from '../utils/constants.js';
 
-const jobSchema = new Schema(
+const schema = new Schema(
   {
     company: String,
     position: String,
@@ -29,4 +29,4 @@ const jobSchema = new Schema(
   }
 );
 
-export default model('Job', jobSchema);
+export default model('Job', schema);

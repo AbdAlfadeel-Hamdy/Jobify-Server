@@ -2,7 +2,7 @@ import { Handler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { Types } from 'mongoose';
 import day from 'dayjs';
-import Job from '../models/JobModel.js';
+import Job from '../models/Job.js';
 
 export const getAllJobs: Handler = async (req: any, res, next) => {
   const { search, jobStatus, jobType, sort } = req.query;
