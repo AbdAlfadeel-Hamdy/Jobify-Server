@@ -52,14 +52,12 @@ export const updateJob: Handler = async (req, res, next) => {
   const updatedJob = await Job.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
   });
-  res
-    .status(StatusCodes.OK)
-    .json({ message: 'Job modified.', job: updatedJob });
+  res.status(StatusCodes.OK).json({ message: 'Job modified', job: updatedJob });
 };
 
 export const deleteJob: Handler = async (req, res, next) => {
   const deletedJob = await Job.findByIdAndDelete(req.params.id);
-  res.status(StatusCodes.OK).json({ message: 'Job deleted.', job: deletedJob });
+  res.status(StatusCodes.OK).json({ message: 'Job deleted', job: deletedJob });
 };
 
 interface JobStatusStats {

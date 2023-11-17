@@ -21,7 +21,6 @@ const withValidationErrors = (validateValues: ValidationChain[]) => {
     validateValues,
     (req: Request, res: Response, next: NextFunction) => {
       const errors = validationResult(req);
-      console.log(errors);
       if (!errors.isEmpty()) {
         const errorMessages = errors
           .array()
