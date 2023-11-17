@@ -1,8 +1,8 @@
-import { Handler } from "express";
-import { StatusCodes } from "http-status-codes";
-import { v2 as cloudinary } from "cloudinary";
-import User from "../models/UserModel";
-import { formatImage } from "../middlewares/multerMiddleware";
+import { Handler } from 'express';
+import { StatusCodes } from 'http-status-codes';
+import { v2 as cloudinary } from 'cloudinary';
+import User from '../models/UserModel.js';
+import { formatImage } from '../middlewares/multerMiddleware.js';
 
 export const getCurrentUser: Handler = async (req: any, res, next) => {
   const user = await User.findById(req.user.id);
@@ -34,5 +34,5 @@ export const updateUser: Handler = async (req: any, res, next) => {
   if (req.file && oldUser?.avatarPublicId)
     await cloudinary.uploader.destroy(oldUser.avatarPublicId);
 
-  res.status(StatusCodes.OK).json({ message: "User updated successfully" });
+  res.status(StatusCodes.OK).json({ message: 'User updated successfully' });
 };

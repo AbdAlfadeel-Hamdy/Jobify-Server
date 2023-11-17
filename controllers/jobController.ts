@@ -1,8 +1,8 @@
-import { Handler } from "express";
-import { StatusCodes } from "http-status-codes";
-import { Types } from "mongoose";
-import day from "dayjs";
-import Job from "../models/JobModel";
+import { Handler } from 'express';
+import { StatusCodes } from 'http-status-codes';
+import { Types } from 'mongoose';
+import day from 'dayjs';
+import Job from '../models/JobModel.js';
 
 export const getAllJobs: Handler = async (req: any, res, next) => {
   const { search, jobStatus, jobType, sort } = req.query;
@@ -13,16 +13,16 @@ export const getAllJobs: Handler = async (req: any, res, next) => {
   };
   if (search)
     queryObj.$or = [
-      { position: new RegExp(search, "i") },
-      { company: { $regex: search, $options: "i" } },
+      { position: new RegExp(search, 'i') },
+      { company: { $regex: search, $options: 'i' } },
     ];
-  if (jobStatus && jobStatus !== "all") queryObj.jobStatus = jobStatus;
-  if (jobType && jobType !== "all") queryObj.jobType = jobType;
+  if (jobStatus && jobStatus !== 'all') queryObj.jobStatus = jobStatus;
+  if (jobType && jobType !== 'all') queryObj.jobType = jobType;
   const sortOptions = {
-    newest: "-createdAt",
-    oldest: "createdAt",
-    "a-z": "position",
-    "z-a": "-position",
+    newest: '-createdAt',
+    oldest: 'createdAt',
+    'a-z': 'position',
+    'z-a': '-position',
   };
   const sortKey =
     sortOptions[sort as keyof typeof sortOptions] || sortOptions.newest;
@@ -54,12 +54,12 @@ export const updateJob: Handler = async (req, res, next) => {
   });
   res
     .status(StatusCodes.OK)
-    .json({ message: "Job modified.", job: updatedJob });
+    .json({ message: 'Job modified.', job: updatedJob });
 };
 
 export const deleteJob: Handler = async (req, res, next) => {
   const deletedJob = await Job.findByIdAndDelete(req.params.id);
-  res.status(StatusCodes.OK).json({ message: "Job deleted.", job: deletedJob });
+  res.status(StatusCodes.OK).json({ message: 'Job deleted.', job: deletedJob });
 };
 
 interface JobStatusStats {
@@ -77,11 +77,11 @@ export const showStats: Handler = async (req: any, res, next) => {
     },
     {
       $group: {
-        _id: "$jobStatus",
+        _id: '$jobStatus',
         count: { $sum: 1 },
       },
     },
-  ])) as { _id: "pending" | "interview" | "declined"; count: number }[];
+  ])) as { _id: 'pending' | 'interview' | 'declined'; count: number }[];
 
   const statsObj = stats.reduce((acc: JobStatusStats, curr) => {
     const { _id: title, count } = curr;
@@ -104,8 +104,8 @@ export const showStats: Handler = async (req: any, res, next) => {
     {
       $group: {
         _id: {
-          year: { $year: "$createdAt" },
-          month: { $month: "$createdAt" },
+          year: { $year: '$createdAt' },
+          month: { $month: '$createdAt' },
         },
         count: {
           $sum: 1,
@@ -114,8 +114,8 @@ export const showStats: Handler = async (req: any, res, next) => {
     },
     {
       $sort: {
-        "_id.year": -1,
-        "_id.month": -1,
+        '_id.year': -1,
+        '_id.month': -1,
       },
     },
     {
@@ -129,7 +129,7 @@ export const showStats: Handler = async (req: any, res, next) => {
       date: day()
         .year(year)
         .month(month - 1)
-        .format("MMM YY"),
+        .format('MMM YY'),
     }))
     .reverse();
 

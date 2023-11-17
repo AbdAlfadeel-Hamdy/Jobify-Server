@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/server.js",
+  "type": "module",
   "scripts": {
-    "start": "node dist/index.js",
-    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\""
+    "build": "npm install && npx tsc",
+    "start": "node dist/app.js",
+    "dev": "concurrently \"npx tsc --watch\" \"node --watch dist/app.js\""
   },
   "keywords": [],
   "author": "",
@@ -22,15 +24,14 @@
     "express": "^4.18.2",
     "express-async-errors": "^3.1.1",
     "express-mongo-sanitize": "^2.2.0",
-    "express-rate-limit": "^6.8.0",
+    "express-rate-limit": "^7.1.4",
     "express-validator": "^7.0.1",
     "helmet": "^7.0.0",
     "http-status-codes": "^2.2.0",
     "jsonwebtoken": "^9.0.0",
-    "mongoose": "^7.0.5",
+    "mongoose": "^8.0.1",
     "morgan": "^1.10.0",
-    "multer": "^1.4.5-lts.1",
-    "nodemon": "^2.0.22"
+    "multer": "^1.4.5-lts.1"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.3",
@@ -39,6 +40,8 @@
     "@types/express": "^4.17.17",
     "@types/jsonwebtoken": "^9.0.2",
     "@types/morgan": "^1.9.5",
-    "@types/multer": "^1.4.9"
+    "@types/multer": "^1.4.9",
+    "@types/node": "^20.9.1",
+    "typescript": "^5.2.2"
   }
 }

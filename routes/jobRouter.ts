@@ -1,5 +1,5 @@
-import { Router } from "express";
-import { ValidationChain } from "express-validator";
+import { Router } from 'express';
+import { ValidationChain } from 'express-validator';
 import {
   getAllJobs,
   createJob,
@@ -7,22 +7,22 @@ import {
   updateJob,
   deleteJob,
   showStats,
-} from "../controllers/jobController";
+} from '../controllers/jobController.js';
 import {
   validateIdParam,
   validateJobInput,
-} from "../middlewares/validationMiddleware";
-import { checkForTestUser } from "../middlewares/authMiddleware";
+} from '../middlewares/validationMiddleware.js';
+import { checkForTestUser } from '../middlewares/authMiddleware.js';
 
 const router = Router();
 
 router
-  .route("/")
+  .route('/')
   .get(getAllJobs)
   .post(checkForTestUser, validateJobInput as ValidationChain[], createJob);
-router.route("/stats").get(showStats);
+router.route('/stats').get(showStats);
 router
-  .route("/:id")
+  .route('/:id')
   .all(validateIdParam as ValidationChain[])
   .get(getJob)
   .patch(checkForTestUser, validateJobInput as ValidationChain[], updateJob)

@@ -1,6 +1,6 @@
-import path from "path";
-import multer from "multer";
-import DataParser from "datauri/parser";
+import path from 'path';
+import multer from 'multer';
+import DataParser from 'datauri/parser.js';
 
 const storage = multer.memoryStorage();
 

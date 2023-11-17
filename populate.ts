@@ -1,21 +1,21 @@
-import { readFile } from "fs/promises";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
+import { readFile } from 'fs/promises';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 dotenv.config();
-import Job from "./models/JobModel";
-import User from "./models/UserModel";
+import Job from './models/JobModel.js';
+import User from './models/UserModel.js';
 
 (async () => {
   try {
-    if (!process.env.MONGO_URL) throw new Error("MongoDB URL is not valid.");
+    if (!process.env.MONGO_URL) throw new Error('MongoDB URL is not valid.');
     await mongoose.connect(process.env.MONGO_URL);
-    const user = await User.findOne({ email: "testuser@test.com" });
-    const dataFile = await readFile("./utils/mockData.json");
+    const user = await User.findOne({ email: 'testuser@test.com' });
+    const dataFile = await readFile('./utils/mockData.json');
     const jsonData = JSON.parse(dataFile.toString()) as (typeof Job)[];
     const jobs = jsonData.map((job) => ({ ...job, createdBy: user?._id }));
     await Job.deleteMany({ createdBy: user?._id });
     await Job.create(jobs);
-    console.log("Data loaded successfully!!!");
+    console.log('Data loaded successfully!!!');
     process.exit(0);
   } catch (error) {
     console.log(error);
