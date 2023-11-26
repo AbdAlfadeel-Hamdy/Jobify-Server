@@ -7,13 +7,14 @@ import {
   validateUserInput,
 } from '../middlewares/validation.js';
 
-const router = Router();
-
+// Rate Limiter
 const apiLimiter = rateLimiter({
   windowMs: 1000 * 60 * 15,
   max: 15,
   message: { message: 'IP rate limit exceeded, try again in 15 minutes' },
 });
+
+const router = Router();
 
 router.post(
   '/register',

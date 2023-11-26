@@ -4,20 +4,25 @@ import { v2 as cloudinary } from 'cloudinary';
 import User from '../models/User.js';
 import { formatImage } from '../middlewares/multer.js';
 
+// Get Current User Info
 export const getCurrentUser: Handler = async (req: any, res, next) => {
   const user = await User.findById(req.user.id);
   const userWithoutPassword = user?.toJSON();
   res.status(StatusCodes.OK).json({ user: userWithoutPassword });
 };
+
+// Calculate number of jobs and users
 export const getApplicationStats: Handler = async (req, res, next) => {
   const jobs = await User.countDocuments();
   const users = await User.countDocuments();
   res.status(StatusCodes.OK).json({ jobs, users });
 };
+
+// Update User (not including password)
 export const updateUser: Handler = async (req: any, res, next) => {
   const newUser = req.body;
   delete newUser.password;
-
+  // Upload User Avatar
   if (req.file) {
     const file = formatImage(req.file);
     if (file) {

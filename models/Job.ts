@@ -1,7 +1,19 @@
 import { Schema, model, Types } from 'mongoose';
 import { JOB_STATUS, JOB_TYPE } from '../utils/constants.js';
 
-const schema = new Schema(
+interface IJob {
+  company: string;
+  position: string;
+  jobStatus: string;
+  jobType: string;
+  jobLocation: string;
+  createdBy: {
+    type: Types.ObjectId;
+    ref: string;
+  };
+}
+
+const jobSchema = new Schema<IJob>(
   {
     company: String,
     position: String,
@@ -22,6 +34,7 @@ const schema = new Schema(
     createdBy: {
       type: Types.ObjectId,
       ref: 'User',
+      required: [true, 'User ID is required'],
     },
   },
   {
@@ -29,4 +42,4 @@ const schema = new Schema(
   }
 );
 
-export default model('Job', schema);
+export default model('Job', jobSchema);

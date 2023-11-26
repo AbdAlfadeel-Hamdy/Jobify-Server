@@ -5,6 +5,7 @@ import { UnauthenticatedError } from '../errors/customErrors.js';
 
 // Register
 export const register: Handler = async (req, res) => {
+  // Set Admin
   const isFirstAccount = (await User.countDocuments()) === 0;
   req.body.role = isFirstAccount ? 'admin' : 'user';
 

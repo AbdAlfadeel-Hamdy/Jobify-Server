@@ -25,10 +25,13 @@ const withValidationErrors = (validateValues: ValidationChain[]) => {
         const errorMessages = errors
           .array()
           .map((err: ValidationError) => err.msg);
+        // Not Found
         if (errorMessages[0].startsWith('No job'))
           throw new NotFoundError(errorMessages.join(' '));
+        // Not Authorized
         if (errorMessages[0].startsWith('Not authorized'))
           throw new UnauthorizedError(errorMessages.join(' '));
+        // Bad Request (default)
         throw new BadRequestError(errorMessages.join(' '));
       }
       next();
@@ -36,6 +39,7 @@ const withValidationErrors = (validateValues: ValidationChain[]) => {
   ];
 };
 
+// Validate Job Input
 export const validateJobInput = withValidationErrors([
   body('company').notEmpty().withMessage('company is required.'),
   body('position').notEmpty().withMessage('position is required.'),
@@ -48,6 +52,7 @@ export const validateJobInput = withValidationErrors([
     .withMessage('invalid type value.'),
 ]);
 
+// Validate ID Parameter
 export const validateIdParam = withValidationErrors([
   param('id').custom(async (value, { req }) => {
     const isValidId = mongoose.Types.ObjectId.isValid(value);
@@ -64,13 +69,15 @@ export const validateIdParam = withValidationErrors([
   }),
 ]);
 
+// Validate NEW User Inputs
 export const validateUserInput = withValidationErrors([
-  body('name').notEmpty().withMessage('Name is required.'),
+  body('name').notEmpty().withMessage('Name is required.').trim(),
   body('email')
     .notEmpty()
     .withMessage('Email is required.')
     .isEmail()
     .withMessage('Invalid email format.')
+    .trim()
     .custom(async (email: string) => {
       const user = await User.findOne({ email });
       if (user) throw new BadRequestError('Email already exists.');
@@ -78,37 +85,44 @@ export const validateUserInput = withValidationErrors([
   body('password')
     .notEmpty()
     .withMessage('Password is required.')
+    .trim()
     .isLength({ min: 8 })
     .withMessage('Password must be at least 8 characters long.'),
-  body('location').notEmpty().withMessage('Location is required.'),
-  body('lastName').notEmpty().withMessage('Last name is required.'),
+  body('location').notEmpty().withMessage('Location is required.').trim(),
+  body('lastName').notEmpty().withMessage('Last name is required.').trim(),
 ]);
 
-export const validateLoginInput = withValidationErrors([
-  body('email')
-    .notEmpty()
-    .withMessage('Email is required.')
-    .isEmail()
-    .withMessage('Invalid email format.'),
-  body('password')
-    .notEmpty()
-    .withMessage('Password is required.')
-    .isLength({ min: 8 })
-    .withMessage('Password must be at least 8 characters long.'),
-]);
-
+// Validate User Input on UPDATE
 export const validateUpdateUserInput = withValidationErrors([
-  body('name').notEmpty().withMessage('Name is required.'),
+  body('name').notEmpty().withMessage('Name is required.').trim(),
   body('email')
     .notEmpty()
     .withMessage('Email is required.')
     .isEmail()
     .withMessage('Invalid email format.')
+    .trim()
     .custom(async (email: string, { req }) => {
+      // Check if NEW Email Exists
       const user = await User.findOne({ email });
       if (user && user._id.toString() !== req.user.id)
         throw new BadRequestError('Email already exists.');
     }),
-  body('location').notEmpty().withMessage('Location is required.'),
-  body('lastName').notEmpty().withMessage('Last name is required.'),
+  body('location').notEmpty().withMessage('Location is required.').trim(),
+  body('lastName').notEmpty().withMessage('Last name is required.').trim(),
+]);
+
+// Validate Login Inputs
+export const validateLoginInput = withValidationErrors([
+  body('email')
+    .notEmpty()
+    .withMessage('Email is required.')
+    .isEmail()
+    .withMessage('Invalid email format.')
+    .trim(),
+  body('password')
+    .notEmpty()
+    .withMessage('Password is required.')
+    .isLength({ min: 8 })
+    .withMessage('Password must be at least 8 characters long.')
+    .trim(),
 ]);

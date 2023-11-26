@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import { Types } from 'mongoose';
 import day from 'dayjs';
 import Job from '../models/Job.js';
-
+// Get All Jobs
 export const getAllJobs: Handler = async (req: any, res, next) => {
   const { search, jobStatus, jobType, sort } = req.query;
   const page = +req.query.page || 1;
@@ -11,13 +11,15 @@ export const getAllJobs: Handler = async (req: any, res, next) => {
   const queryObj: { [key: string]: any } = {
     createdBy: req.user.id,
   };
+  if (jobStatus && jobStatus !== 'all') queryObj.jobStatus = jobStatus;
+  if (jobType && jobType !== 'all') queryObj.jobType = jobType;
+  // Searching
   if (search)
     queryObj.$or = [
       { position: new RegExp(search, 'i') },
       { company: { $regex: search, $options: 'i' } },
     ];
-  if (jobStatus && jobStatus !== 'all') queryObj.jobStatus = jobStatus;
-  if (jobType && jobType !== 'all') queryObj.jobType = jobType;
+  // Sorting
   const sortOptions = {
     newest: '-createdAt',
     oldest: 'createdAt',
@@ -26,46 +28,48 @@ export const getAllJobs: Handler = async (req: any, res, next) => {
   };
   const sortKey =
     sortOptions[sort as keyof typeof sortOptions] || sortOptions.newest;
+  // Calculating Total Jobs and Number of Pages
   const totalJobs = await Job.countDocuments(queryObj);
+  const numOfPages = Math.ceil(totalJobs / limit);
+  // Executing Query
   const jobs = await Job.find(queryObj)
     .sort(sortKey)
     .skip((page - 1) * limit)
     .limit(limit);
-  const numOfPages = Math.ceil(totalJobs / limit);
   res
     .status(StatusCodes.OK)
     .json({ totalJobs, numOfPages, currentPage: page, jobs });
 };
-
+// Create New Job
 export const createJob: Handler = async (req: any, res, next) => {
   req.body.createdBy = req.user.id;
   const job = await Job.create(req.body);
   res.status(StatusCodes.CREATED).json({ job });
 };
-
+// Get Single Job
 export const getJob: Handler = async (req, res, next) => {
   const job = await Job.findById(req.params.id);
   res.status(StatusCodes.OK).json({ job });
 };
-
+// Update Job
 export const updateJob: Handler = async (req, res, next) => {
   const updatedJob = await Job.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
   });
   res.status(StatusCodes.OK).json({ message: 'Job modified', job: updatedJob });
 };
-
+// Delete Job
 export const deleteJob: Handler = async (req, res, next) => {
   const deletedJob = await Job.findByIdAndDelete(req.params.id);
   res.status(StatusCodes.OK).json({ message: 'Job deleted', job: deletedJob });
 };
 
+// Jobs Stats
 interface JobStatusStats {
   pending?: number;
   interview?: number;
   declined?: number;
 }
-
 export const showStats: Handler = async (req: any, res, next) => {
   const stats = (await Job.aggregate([
     {
@@ -80,7 +84,7 @@ export const showStats: Handler = async (req: any, res, next) => {
       },
     },
   ])) as { _id: 'pending' | 'interview' | 'declined'; count: number }[];
-
+  // Calculate Job status Stats
   const statsObj = stats.reduce((acc: JobStatusStats, curr) => {
     const { _id: title, count } = curr;
     acc[title] = count;
@@ -92,7 +96,7 @@ export const showStats: Handler = async (req: any, res, next) => {
     interview: statsObj.interview || 0,
     declined: statsObj.declined || 0,
   };
-
+  // Calculate Monthly Applications
   const monthlyApplications = (await Job.aggregate([
     {
       $match: {
